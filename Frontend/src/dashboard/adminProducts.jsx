@@ -9,15 +9,13 @@ function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch all products (admin API)
+  // ✅ Fetch all products from backend
   const fetchProducts = async () => {
     try {
       const { data } = await axios.get("http://localhost:4001/api/products");
-      console.log("Admin products data:", data); 
-
       setProducts(data);
     } catch (error) {
-      toast.error("Failed to load admin products");
+      toast.error("Failed to load products");
     } finally {
       setLoading(false);
     }
@@ -27,6 +25,7 @@ function AdminProducts() {
     fetchProducts();
   }, []);
 
+  // ✅ Delete product
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?"))
       return;
@@ -39,11 +38,6 @@ function AdminProducts() {
       toast.error("Failed to delete product");
     }
   };
-useEffect(() => {
-  fetchProducts();
-}, []);
-
-console.log("Products in admin:", products);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-6">
@@ -54,7 +48,9 @@ console.log("Products in admin:", products);
       {loading ? (
         <p className="text-center text-gray-600 text-lg">Loading products...</p>
       ) : products.length === 0 ? (
-        <p className="text-center text-gray-600 text-lg">No products found.</p>
+        <p className="text-center text-gray-600 text-lg">
+          No products available.
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
@@ -62,15 +58,15 @@ console.log("Products in admin:", products);
               key={product._id}
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 group"
             >
-              {/* Product Image */}
-              <div className="h-56 w-full overflow-hidden relative">
+              {/* Product Image (Square Shape) */}
+              <div className="aspect-square w-full overflow-hidden relative">
                 <img
                   src={
                     product.images?.[0]?.url ||
-                    "https://via.placeholder.com/300x200?text=Medicine"
+                    "https://via.placeholder.com/300x300?text=Medicine"
                   }
                   alt={product.name}
-                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
 
@@ -83,11 +79,11 @@ console.log("Products in admin:", products);
                   {product.category || "General Medicine"}
                 </p>
 
-                <div className="text-gray-700 text-sm mb-3 prose prose-sm max-w-none">
-  <ReactMarkdown>{String(product.description || "")}</ReactMarkdown>
-</div>
+                <div className="text-gray-700 text-sm mb-3 line-clamp-3 prose prose-sm">
+                  <ReactMarkdown>{product.description}</ReactMarkdown>
+                </div>
 
-
+                {/* Price and Stock */}
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-blue-600 font-bold text-lg">
                     ₹{product.price}
@@ -103,12 +99,10 @@ console.log("Products in admin:", products);
                   </span>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Admin Action Buttons */}
                 <div className="flex gap-2">
                   <button
-                    onClick={() =>
-                      navigate(`/admin/edit-product/${product._id}`)
-                    }
+                    onClick={() => navigate(`/product/update/${product._id}`)}
                     className="flex-1 bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition font-medium"
                   >
                     Edit

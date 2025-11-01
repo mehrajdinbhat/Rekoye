@@ -5,22 +5,37 @@ function Queries() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Fetch all messages
   useEffect(() => {
-    const fetchMessages = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get("http://localhost:4001/api/contact");
-        setContacts(res.data);
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-        alert("Failed to fetch messages!");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchMessages();
   }, []);
+
+  const fetchMessages = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get("http://localhost:4001/api/contact");
+      setContacts(res.data);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      alert("Failed to fetch messages!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Delete query handler
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this query?")) return;
+
+    try {
+      await axios.delete(`http://localhost:4001/api/contact/${id}`);
+      setContacts(contacts.filter((contact) => contact._id !== id));
+      alert("Query deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting query:", error);
+      alert("Failed to delete query!");
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
@@ -43,6 +58,7 @@ function Queries() {
                   <th className="p-2 border">Email</th>
                   <th className="p-2 border">Message</th>
                   <th className="p-2 border">Date</th>
+                  <th className="p-2 border text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -53,6 +69,14 @@ function Queries() {
                     <td className="p-2 border">{contact.message}</td>
                     <td className="p-2 border">
                       {new Date(contact.createdAt).toLocaleString()}
+                    </td>
+                    <td className="p-2 border text-center">
+                      <button
+                        onClick={() => handleDelete(contact._id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -80,6 +104,12 @@ function Queries() {
                 <p className="text-sm text-gray-500">
                   {new Date(contact.createdAt).toLocaleString()}
                 </p>
+                <button
+                  onClick={() => handleDelete(contact._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md w-full mt-2"
+                >
+                  Delete
+                </button>
               </div>
             ))}
           </div>
