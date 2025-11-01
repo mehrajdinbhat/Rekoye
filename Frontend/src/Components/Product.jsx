@@ -1,120 +1,15 @@
-// import React from "react";
-
-// const products = [
-//   {
-//     id: 1,
-//     name: "Alexit-M",
-//     description: "Pain relief and anti-inflammatory medicine.",
-//     img: "/hero1.jpg",
-//   },
-//   {
-//     id: 2,
-//     name: "Cefaxin",
-//     description: "Antibiotic for various bacterial infections.",
-//     img: "/hero.jpg",
-//   },
-//   {
-//     id: 3,
-//     name: "NeuroCalm",
-//     description: "CNS medication for neurological support.",
-//     img: "/hero2.jpg",
-//   },
-//   {
-//     id: 4,
-//     name: "CardioSafe",
-//     description: "Heart health and blood pressure support.",
-//     img: "/hero3.jpg",
-//   },
-//     {
-//     id: 5,
-//     name: "Alexit-M",
-//     description: "Pain relief and anti-inflammatory medicine.",
-//     img: "/hero1.jpg",
-//   },
-//   {
-//     id: 6,
-//     name: "Cefaxin",
-//     description: "Antibiotic for various bacterial infections.",
-//     img: "/hero.jpg",
-//   },
-//   {
-//     id: 7,
-//     name: "NeuroCalm",
-//     description: "CNS medication for neurological support.",
-//     img: "/hero2.jpg",
-//   },
-//   {
-//     id: 8,
-//     name: "CardioSafe",
-//     description: "Heart health and blood pressure support.",
-//     img: "/hero3.jpg",
-//   },
-//     {
-//     id: 9,
-//     name: "Alexit-M",
-//     description: "Pain relief and anti-inflammatory medicine.",
-//     img: "/hero1.jpg",
-//   },
-//   {
-//     id: 10,
-//     name: "Cefaxin",
-//     description: "Antibiotic for various bacterial infections.",
-//     img: "/hero.jpg",
-//   },
-//   {
-//     id: 11,
-//     name: "NeuroCalm",
-//     description: "CNS medication for neurological support.",
-//     img: "/hero2.jpg",
-//   },
-//   {
-//     id: 12,
-//     name: "CardioSafe",
-//     description: "Heart health and blood pressure support.",
-//     img: "/hero3.jpg",
-//   },
-  
-// ];
-
-// export default function Product() {
-//   return (
-//     <section className="py-20 bg-sky-50">
-//       <div className="max-w-6xl mx-auto px-4 md:px-8">
-//         <h2 className="text-4xl font-bold text-sky-800 mb-12 text-center">
-//           Our Products
-//         </h2>
-
-//         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-//           {products.map((product) => (
-//             <div
-//               key={product.id}
-//               className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-//             >
-//               <img
-//                 src={product.img}
-//                 alt={product.name}
-//                 className="w-full h-48 object-cover"
-//               />
-//               <div className="p-4">
-//                 <h3 className="text-xl font-semibold text-sky-800 mb-2">
-//                   {product.name}
-//                 </h3>
-//                 <p className="text-gray-700">{product.description}</p>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
 
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+ import ReactMarkdown from "react-markdown";
+
+
 
 function Products() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -173,9 +68,12 @@ function Products() {
                 <p className="text-gray-500 text-sm mb-2">
                   {product.category || "General Medicine"}
                 </p>
-                <p className="text-gray-700 text-sm mb-3 line-clamp-2">
-                  {product.description || "No description available."}
-                </p>
+                {/* <p className="text-gray-700 text-sm mb-3 line-clamp-2"> */}
+                {/* {product.description || "No description available."} */}
+                {/* </p> */}
+                <div className="text-gray-700 text-sm mb-3 line-clamp-3 prose prose-sm">
+                  <ReactMarkdown>{product.description}</ReactMarkdown>
+                </div>
 
                 {/* Price and Stock */}
                 <div className="flex justify-between items-center mb-3">
@@ -192,9 +90,11 @@ function Products() {
                       : "Out of Stock"}
                   </span>
                 </div>
-
                 {/* Action Button */}
-                <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium">
+                <button
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+                >
                   View Details
                 </button>
               </div>

@@ -66,24 +66,36 @@ function AdminDashboard() {
         } md:translate-x-0`}
       >
         <h2 className="text-2xl font-bold mb-8 text-center">Admin Panel</h2>
+
         <button
           onClick={fetchProducts}
           className="mb-3 py-2 px-4 rounded bg-blue-600 hover:bg-blue-700 w-full"
         >
           See Products
         </button>
+
         <button
           onClick={() => navigate("/queries")}
           className="mb-3 py-2 px-4 rounded bg-yellow-600 hover:bg-yellow-700 w-full"
         >
           See Messages
         </button>
+
         <button
           onClick={() => navigate("/create")}
           className="mb-3 py-2 px-4 rounded bg-green-600 hover:bg-green-700 w-full"
         >
           Create Product
         </button>
+
+        {/* 🏠 Home Button */}
+        <button
+          onClick={() => navigate("/")}
+          className="mb-3 py-2 px-4 rounded bg-indigo-600 hover:bg-indigo-700 w-full"
+        >
+          Home
+        </button>
+
         <button
           onClick={handleLogout}
           className="py-2 px-4 rounded bg-red-600 hover:bg-red-700 w-full"
@@ -124,6 +136,7 @@ function AdminDashboard() {
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
+
                 <h2 className="text-lg font-semibold text-gray-800 truncate">
                   {product.name}
                 </h2>

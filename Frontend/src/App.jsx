@@ -11,6 +11,7 @@ import AdminDashboard from "./dashboard/AdminDashboard.jsx";
 import CreateProduct from "./dashboard/CreateProduct.jsx";
 import AdminProducts from "./dashboard/adminProducts.jsx";
 import EditProduct from "./dashboard/editProduct.jsx";
+import ProductDetail from "./Components/detail.jsx";
 
 
 
@@ -19,7 +20,6 @@ function App() {
 
   return (
     <>
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/ourproducts" element={<Products />} />
@@ -30,6 +30,7 @@ function App() {
         <Route path="/create" element={<CreateProduct />} />
         <Route path="/admin/products" element={<AdminProducts />} />
         <Route path="/product/update/:id" element={<EditProduct />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
     </>
   );

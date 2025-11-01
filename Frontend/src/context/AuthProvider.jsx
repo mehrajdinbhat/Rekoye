@@ -39,28 +39,4 @@ export const useAuth = () => useContext(AuthContext);
 
 
 
-// import React from "react";
-// import Navbar from "../Components/Navbar"; // 👈 one level up
-// import Footer from "../Components/Footer";
-// import HeroCarousel from "../Components/HeroCarousel";
-// import Littleabout from "../Components/Littleabout";
-// import Product from "../Components/Product";
-// import Stats from "../Components/Stats"; // watch the case!
-// import Director from "../Components/Director";
-
-// function Home() {
-//   return (
-//     <>
-//       <Navbar />
-//       <HeroCarousel />
-//       <Littleabout />
-//       <Product />
-//       <Stats />
-//       <Director />
-//       <Footer />
-//     </>
-//   );
-// }
-
-// export default Home;
 

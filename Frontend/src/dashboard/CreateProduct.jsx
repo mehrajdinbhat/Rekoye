@@ -1,4 +1,3 @@
-// src/pages/CreateProduct.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -14,39 +13,50 @@ function CreateProduct() {
     images: [],
   });
 
+  const [previewImages, setPreviewImages] = useState([]); // 👈 for image previews
+
   const navigate = useNavigate();
 
+  // ✅ Handle text & number changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ✅ Handle multiple image selection & show previews
   const handleImageChange = (e) => {
-    setFormData({ ...formData, images: e.target.files });
+    const files = Array.from(e.target.files);
+    setFormData({ ...formData, images: files });
+
+    // generate preview URLs for display
+    const previews = files.map((file) => URL.createObjectURL(file));
+    setPreviewImages(previews);
   };
 
+  // ✅ Submit product form
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const data = new FormData();
+
       for (const key in formData) {
         if (key === "images") {
-          for (const file of formData.images) data.append("images", file);
+          for (const file of formData.images) {
+            data.append("images", file);
+          }
         } else {
           data.append(key, formData[key]);
         }
       }
 
-      await axios.post(
-        "http://localhost:4001/api/products/create",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
-      toast.success("Product created successfully!");
+      await axios.post("http://localhost:4001/api/products/create", data, {
+        withCredentials: true,
+      });
+
+      toast.success("✅ Product created successfully!");
       navigate("/admin");
     } catch (error) {
-      toast.error("Failed to create product");
+      toast.error("❌ Failed to create product");
     }
   };
 
@@ -56,8 +66,11 @@ function CreateProduct() {
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Create Product</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          🧾 Create Product
+        </h2>
 
+        {/* Product Name */}
         <input
           type="text"
           name="name"
@@ -67,13 +80,16 @@ function CreateProduct() {
           required
         />
 
+        {/* Description */}
         <textarea
           name="description"
-          placeholder="Description"
+          placeholder="Description (You can use markdown: **bold**, - points)"
           className="w-full mb-3 p-2 border rounded"
+          rows="4"
           onChange={handleChange}
         />
 
+        {/* Category */}
         <input
           type="text"
           name="category"
@@ -82,6 +98,7 @@ function CreateProduct() {
           onChange={handleChange}
         />
 
+        {/* Price */}
         <input
           type="number"
           name="price"
@@ -91,6 +108,7 @@ function CreateProduct() {
           required
         />
 
+        {/* Stock */}
         <input
           type="number"
           name="stock"
@@ -99,6 +117,10 @@ function CreateProduct() {
           onChange={handleChange}
         />
 
+        {/* Images Upload */}
+        <label className="block mb-2 font-semibold text-gray-700">
+          Upload Images
+        </label>
         <input
           type="file"
           name="images"
@@ -108,9 +130,40 @@ function CreateProduct() {
           onChange={handleImageChange}
         />
 
+        {/* 👇 Image Previews */}
+        {previewImages.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-4">
+            {previewImages.map((img, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={img}
+                  alt={`preview-${index}`}
+                  className="w-24 h-24 object-cover rounded border"
+                />
+                {/* remove image option */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newFiles = [...formData.images];
+                    const newPreviews = [...previewImages];
+                    newFiles.splice(index, 1);
+                    newPreviews.splice(index, 1);
+                    setFormData({ ...formData, images: newFiles });
+                    setPreviewImages(newPreviews);
+                  }}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
         >
           Create Product
         </button>
